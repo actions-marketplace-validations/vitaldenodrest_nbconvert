@@ -20,9 +20,14 @@ runs:
     - name: Setup Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
+        auto-update-conda: true
         auto-activate-base: true
-        activate-environment: "" 
-        environment-file: ${{ inputs.environment-file }}
+
+    - name: Update Base Environment with User Dependencies
+      shell: bash -l {0}
+      run: |
+        echo "Merging ${{ inputs.environment-file }} into base environment..."
+        conda env update --name base --file ${{ inputs.environment-file }}
 
     - name: Ensure Convert tools are installed
       shell: bash -l {0} 
