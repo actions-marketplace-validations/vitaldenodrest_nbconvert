@@ -1,0 +1,43 @@
+name: 'nbconvert-artifacts'
+description: 'Export .ipynb files to artifacts'
+
+
+input:
+  environment-file:
+      description: 'Path to the conda env file required to run and export notebooks'
+      required: true
+
+
+runs:
+
+  using: "composite"
+
+  steps:
+
+    - name: .ipynb
+      uses: actions/checkout@v6
+      with:
+        sparse-checkout-cone-mode: false
+        sparse-checkout: |
+          **/*.ipynb
+          ${{ inputs.environment-file }}
+
+    - name: Setup Miniconda
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        environment-file: ${{ inputs.environment-file }}
+
+    - name: Ensure Convert tools are installed
+      run: |
+        conda install -y jupyter nbconvert || pip install jupyter nbconvert
+
+    - name: Run and compile notebooks recursively
+      run: |
+        shopt -s globstar
+        jupyter nbconvert --to html --execute **/*.ipynb
+
+    - name: Upload HTML Artifacts
+      uses: actions/upload-artifact@v5.0.0
+      with:
+        name: notebooks-html
+        path: "**/*.html"
