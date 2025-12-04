@@ -9,8 +9,9 @@ branding:
 
 input:
   environment-file:
-      description: 'Path to the conda env file required to run and export notebooks'
-      required: true
+    description: 'Path to the conda env file required to run and export notebooks'
+    required: true
+
 
 
 runs:
