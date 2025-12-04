@@ -1,4 +1,4 @@
-name: 'nbconvert-artifacts'
+name: 'nbconvert'
 description: 'Export .ipynb files'
 
 
@@ -20,9 +20,9 @@ runs:
     - name: Setup Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
+        auto-activate-base: true
         activate-environment: "" 
         environment-file: ${{ inputs.environment-file }}
-        auto-activate-base: false
 
     - name: Ensure Convert tools are installed
       shell: bash -l {0} 
