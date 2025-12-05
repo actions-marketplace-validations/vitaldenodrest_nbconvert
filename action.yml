@@ -18,13 +18,13 @@ inputs:
     description: 'Should the notebooks be exported to html?'
     type: boolean
     required: false
-    default: 'true'
+    default: true
 
   enable-pdf:
     description: 'Should the notebooks be exported to pdf?'
     type: boolean
     required: false
-    default: 'false'
+    default: false
 
 
 runs:
@@ -34,7 +34,7 @@ runs:
     - name: Install TeX Live if .pdf
       shell: bash -l {0}
       run: |
-        if [${{ inputs.enable-pdf }} == 'true']; then   
+        if ${{ inputs.enable-pdf }}; then   
           sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-plain-generic
         fi
 
@@ -52,12 +52,12 @@ runs:
       shell: bash -l {0}
       run: |
         shopt -s globstar
-        if [${{ inputs.enable-html }} == 'true']; then
+        if ${{ inputs.enable-html }}; then
           echo "Converting notebooks to html..."
           jupyter nbconvert --to html --execute **/*.ipynb
         fi
         if 
-        if [${{ inputs.enable-pdf }} == 'true']; then
+        if ${{ inputs.enable-pdf }}; then
           echo "Converting notebooks to pdf..."
           jupyter nbconvert --to pdf --execute **/*.ipynb
         fi
