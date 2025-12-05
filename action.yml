@@ -9,9 +9,22 @@ branding:
 
 
 inputs:
+
   environment-file:
     description: 'Path to the conda env file required to run and export notebooks. It must contain name:notebook-env.'
     required: true
+  
+  enable-html:
+    description: 'Should the notebooks be exported to html?'
+    type: boolean
+    required: false
+    default: 'true'
+
+  enable-pdf:
+    description: 'Should the notebooks be exported to pdf?'
+    type: boolean
+    required: false
+    default: 'false'
 
 
 runs:
