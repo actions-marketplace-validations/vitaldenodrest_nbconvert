@@ -26,8 +26,14 @@ jobs:
           enable-html: true
           enable-pdf: true
 
-      - name: Upload results as artifacts
+      - name: Upload html results as artifacts
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: compiled-notebooks
+          name: compiled-notebooks-html
           path: "**/*.html"
+
+      - name: Upload pdf results as artifacts
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: compiled-notebooks-pdf
+          path: "**/*.pdf"
