@@ -56,5 +56,5 @@ jobs:
       - name: Upload Python scripts as artifacts
         uses: actions/upload-artifact@v5.0.0
         with:
-          name: compiled-notebooks-pdf
+          name: compiled-notebooks-py
           path: "**/*.py"
