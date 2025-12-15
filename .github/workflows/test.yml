@@ -19,7 +19,42 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
       
-      - name: Execute action
+      - name: Execute action (HTML)
         uses: ./
         with:
-          environment-file: test_env.yml
+          environment-file: ./tests/test_env.yml
+          enable-html: true
+          enable-pdf: false
+
+      - name: Execute action (PDF)
+        uses: ./
+        with:
+          environment-file: ./tests/test_env.yml
+          enable-html: false
+          enable-pdf: true
+
+      - name: Execute action (Python script)
+        uses: ./
+        with:
+          environment-file: ./tests/test_env.yml
+          enable-html: false
+          enable-pdf: false
+          enable-py: true
+
+      - name: Upload HTML results as artifacts
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: compiled-notebooks-html
+          path: "**/*.html"
+
+      - name: Upload PDF results as artifacts
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: compiled-notebooks-pdf
+          path: "**/*.pdf"
+
+      - name: Upload Python scripts as artifacts
+        uses: actions/upload-artifact@v5.0.0
+        with:
+          name: compiled-notebooks-py
+          path: "**/*.py"

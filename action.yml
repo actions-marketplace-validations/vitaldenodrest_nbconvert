@@ -1,6 +1,6 @@
 name: 'nbconvert'
 description: 'Export .ipynb files'
-author: 'Vital de Nodrest'
+author: 'Vital de Nodrest (@vitaldenodrest)'
 
 
 branding:
@@ -9,21 +9,45 @@ branding:
 
 
 inputs:
+
   environment-file:
-    description: 'Path to the conda env file required to run and export notebooks. It must contain name:notebook-env.'
+    description: 'Path to the conda env file required to run and export notebooks.'
     required: true
+  
+  enable-html:
+    description: 'Should the notebooks be exported to html?'
+    type: boolean
+    required: false
+    default: true
+
+  enable-pdf:
+    description: 'Should the notebooks be exported to pdf?'
+    type: boolean
+    required: false
+    default: false
+
+  enable-py:
+    description: 'Should the notebooks be exported as Python scripts?'
+    type: boolean
+    required: false
+    default: false
 
 
 runs:
   using: "composite"
   steps:
 
+    - name: Install TeX Live if .pdf
+      shell: bash -l {0}
+      run: |
+        if ${{ inputs.enable-pdf }}; then   
+          sudo apt-get install texlive-xetex texlive-fonts-recommended texlive-plain-generic
+        fi
+
     - name: Setup Miniconda
       uses: conda-incubator/setup-miniconda@v3
       with:
         environment-file: ${{ inputs.environment-file }}
-        auto-activate-base: false
-        activate-environment: 'notebook-env'
 
     - name: Ensure Jupyter tools are installed
       shell: bash -l {0}
@@ -34,5 +58,15 @@ runs:
       shell: bash -l {0}
       run: |
         shopt -s globstar
-        echo "Converting notebooks..."
-        jupyter nbconvert --to html --execute **/*.ipynb
+        if ${{ inputs.enable-html }}; then
+          echo "Converting notebooks to html..."
+          jupyter nbconvert --to html --execute **/*.ipynb
+        fi
+        if ${{ inputs.enable-pdf }}; then
+          echo "Converting notebooks to pdf..."
+          jupyter nbconvert --to pdf --execute **/*.ipynb
+        fi
+        if ${{ inputs.enable-py }}; then
+          echo "Converting notebooks to Python scripts..."
+          jupyter nbconvert --to script **/*.ipynb
+        fi
